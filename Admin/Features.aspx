@@ -99,7 +99,7 @@
                     <td><p>Features title</p></td>
                     <td ><p> features description </p></td>
                        <td class="text-center"> <img src="assets/img/slides-1.jpg" width="100" height="60" class="img-fluid"/> </td>
-                    <%--<td><a  href="?all-departments"><i class="bi bi-pencil-square text-success"></i> </a></td>--%>
+                      <%--<td><a  href="?all-departments"><i class="bi bi-pencil-square text-success"></i> </a></td>--%>
                       <td> <button type="button" class="btn btn-link" onclick="editFeature(1);">
         <i class="bi bi-pencil-square text-success"></i>
     </button></td>
@@ -137,7 +137,7 @@
  <!-- Vertically centered Modal -->
  
        <div class="modal fade" id="verticalycentered" tabindex="-1">
-    <%--<div class="modal-dialog modal-dialog-centered modal-lg">--%>
+           <%--<div class="modal-dialog modal-dialog-centered modal-lg">--%>
         <div class="modal-dialog  modal-lg">
         <div class="modal-content">
            <div class="modal-header text-center">
@@ -145,13 +145,14 @@
             </div>
 
             <div class="modal-body">
-                <form>
+                
                     <div class="form-group mb-3">
                         <div class="row">
                             <label for="post_title" class="col-sm-12 col-lg-3 col-form-label"><b>Title</b></label>
                             <div class="col-sm-12 col-lg-9">
-                                <input type="text"  placeholder="Title" class="form-control" id="title" name="title" required autofocus onblur="handleChange(event)">
-                                <label for="error_label" id="error_label" class="col-sm-12 col-lg-3 col-form-label text-danger"><b>Title</b></label>
+                                <%--<input type="text"  placeholder="Title" class="form-control" id="title" name="title" runat="server"  autofocus onblur="handleChange(event)">--%>
+                                <asp:TextBox ID="Feature_title" class="form-control" runat="server" ></asp:TextBox>
+                                <asp:RequiredFieldValidator ID="TitleField_Validator" runat="server" ErrorMessage="Please add  title to feature" ControlToValidate="Feature_title" ForeColor="Red" Display="Dynamic" ></asp:RequiredFieldValidator>
                             </div>
                         </div>
                         
@@ -161,7 +162,8 @@
                         <div class="row">
                             <label for="post_title" class="col-12 col-sm-12 col-lg-3 col-form-label"><b>Description</b></label>
                             <div class="col-12 col-sm-12 col-lg-9">
-                                <Textarea type="text" placeholder="Description" class="form-control" id="description" name="description" required autofocus></Textarea>
+                                <asp:TextBox placeholder="Description" class="form-control" id="feature_description" runat="server" name="description" required autofocus TextMode="MultiLine"></asp:TextBox>
+                               <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please add some description" ControlToValidate="feature_description" ForeColor="Red" Display="Dynamic" ></asp:RequiredFieldValidator>
                             </div>
                            
                         </div>
@@ -170,11 +172,18 @@
                     <div class="row">
                         <label for="post_title" class="col-12 col-sm-12 col-lg-3 col-form-label"><b>Choose Image</b></label>
                         <div class="col-12 col-sm-12 col-lg-9">
-                            <input type="file" class="form-control" id="featureImage" name="featureImage" accept="image/*" required autofocus onchange="previewImage(event)">
+                            <asp:FileUpload ID="featureImage" runat="server" CssClass="form-control" accept="image/*" onchange="previewImage(event)" />
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="featureImage" ErrorMessage="Please select an image file." ForeColor="Red" Display="Dynamic" />
+                            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="featureImage" ErrorMessage="Only image files are allowed." ValidationExpression=".*\.(jpg|jpeg|png|gif)$" ForeColor="Red" Display="Dynamic"/>
+
+                             <%--<input type="file" class="form-control" id="featureImage" name="featureImage" accept="image/*" runat="server" onchange="previewImage(event)" />--%>
+                            <%--<asp:RequiredFieldValidator ID="rfvFeatureImage" runat="server" ControlToValidate="featureImage" ErrorMessage="Please select an image file." ForeColor="Red" Display="Dynamic" />--%>
+                             <%--<asp:RegularExpressionValidator ID="revFeatureImage" runat="server" ControlToValidate="featureImage" ErrorMessage="Only image files are allowed." ValidationExpression=".*\.(jpg|jpeg|png|gif)$" ForeColor="Red" Display="Dynamic"/>--%>
+                            <%--<input type="file" class="form-control" id="featureImage" name="featureImage" accept="image/*" runat="server" required autofocus onchange="previewImage(event)">--%>
                         </div>
                     </div>
                 </div>
-
+                    
                 <div class="form-group mb-3" id="feature-image">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-lg-3 col-form-label"></div>
@@ -186,11 +195,11 @@
 
                
 
-                </form>
+                
             </div>
             <div class="modal-footer mb-0">
                 <button type="button" class="btn btn-danger btn-small" data-bs-dismiss="modal">Close</button>          
-                <button type="button" class="btn btn-primary btn-small" id="saveButton" onclick="saveFeature()">Save</button>
+                <asp:Button runat="server" type="button" class="btn btn-primary btn-small" id="saveButton"  Text="Save" OnClick="saveButton_Click"></asp:Button>
                 <button type="button" class="btn btn-success btn-small" id="updateButton" style="display:none;" onclick="updateFeature()">Update</button>
             </div>
         </div>

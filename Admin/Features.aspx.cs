@@ -1,8 +1,10 @@
 ﻿using HospitalWebsite.Admin.App_Code.Helpers;
+using HospitalWebsite.Admin.App_Code.Models.Features;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -18,34 +20,63 @@ namespace HospitalWebsite.Admin
             // Inject breadcrumb HTML into the page
             BreadcrumbPlaceholder.Controls.Add(new LiteralControl(BreadcrumbUtility.GetBreadcrumbHtml("Features", "./Dashboard.aspx", "Home", "#", "Features")));
 
-            string query = "SELECT * FROM Users";
-            using (SqlConnection connection = new SqlConnection(GlobalVariables.connectionString))
+          
+
+        }
+
+        protected void saveButton_Click(object sender, EventArgs e)
+        {
+            string title = Feature_title.Text;
+            string description = feature_description.Text;
+            string imageUrl = "";
+
+            //Handle image upload
+            if (featureImage.HasFile)
             {
-                using (SqlCommand command = new SqlCommand(query, connection))
+                try
                 {
-                    connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
-
-                    // Check if there are rows returned
-                    if (dataReader.HasRows)
-                    {
-                        // Read the first row
-                        dataReader.Read();
-
-                        // Retrieve data from the first row
-                        string userData = "Username: " + dataReader["password"].ToString();
-
-                        // Register JavaScript to display alert
-                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('" + userData + "')", true);
-                    }
-                    else
-                    {
-                        // If no rows returned
-                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('No data found')", true);
-                    }
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(featureImage.FileName);
+                    string uploadFolderPath = Server.MapPath("~/Images/");
+                    string imagePath = Path.Combine(uploadFolderPath, filename);
+                    featureImage.SaveAs(imagePath);
+                    imageUrl = filename; // Save the relative path to the image
+                }
+                catch (Exception ex)
+                {
+                    // Handle file saving exceptions here
+                    // Log the exception or show an error message
+                    // For debugging, you can use ex.Message to see the error message
+                    // Example: Response.Write("Error: " + ex.Message);
                 }
             }
 
+            // Insert into the database
+            using (SqlConnection connection = new SqlConnection(GlobalVariables.connectionString))
+            {
+                string query = "INSERT INTO Features (Title, Description, imageName) VALUES (@Title, @Description, @ImageUrl)";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Title", title);
+                command.Parameters.AddWithValue("@Description", description);
+                command.Parameters.AddWithValue("@ImageUrl", imageUrl);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    // Optionally, you can redirect the user to another page or display a success message here
+                }
+                catch (Exception ex)
+                {
+                    // Handle database insertion exceptions here
+                    // Log the exception or show an error message
+                    // For debugging, you can use ex.Message to see the error message
+                    // Example: Response.Write("Error: " + ex.Message);
+                }
+            }
         }
+
+
+
+
     }
 }

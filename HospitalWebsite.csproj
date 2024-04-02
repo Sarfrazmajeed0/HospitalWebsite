@@ -414,7 +414,7 @@
     </Compile>
     <Compile Include="Admin\App_Code\Helpers\BreadcrumbUtility.cs" />
     <Compile Include="Admin\App_Code\Helpers\GlobalVariables.cs" />
-    <Compile Include="Admin\App_Code\Models\Features\Features_Model.cs" />
+    <Compile Include="Admin\Models\Features\Features_Model.cs" />
     <Compile Include="Admin\Courses.aspx.cs">
       <DependentUpon>Courses.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -638,7 +638,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Admin\assets\vendor\chart.js\controllers\controller.bar.d.ts" />
     <TypeScriptCompile Include="Admin\assets\vendor\chart.js\controllers\controller.bubble.d.ts" />
